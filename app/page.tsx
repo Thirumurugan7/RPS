@@ -418,6 +418,8 @@ console.log("Stake transaction confirmed");
         const response1 = await fetch(`/api/points?address=${Address}`);
         const data1 = await response1.json();
         console.log("Awarding points for staking"); // Add logging
+
+        const pointsToAward = amount * 10;
         
         const response = await fetch('/api/points', {
           method: 'POST',
@@ -426,7 +428,7 @@ console.log("Stake transaction confirmed");
           },
           body: JSON.stringify({
             address: addresss,
-            points: data1.currentPoints + amount * 10,
+            points: Number(data1.currentPoints) + Number(pointsToAward),
             reason: 'Staking tokens'
           }),
         });

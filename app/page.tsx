@@ -350,6 +350,8 @@ export default function PlayPage() {
 
 
     const astrAmountInWei = parseEther(amount.toString());
+
+    console.log("astrAmountInWei:", astrAmountInWei);
     console.log("No allowance");
     const stakeHash = await writeContractAsync({
       address: '0x16c70B621Ba8A14c13804B2318a0BcBf0D21Ec98',
@@ -375,7 +377,7 @@ export default function PlayPage() {
       functionName: 'claim',
       args: [
         '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
-        BigInt('1000000000000000000'),
+        parseEther(amount.toString()),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         BigInt('500000000000'),
         {

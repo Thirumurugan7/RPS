@@ -406,7 +406,7 @@ export default function PlayPage() {
         },
         '0x'
       ], 
-      value: totalValueInWei
+      value: BigInt(parseEther("0.0000005"))
   });
 
   await publicClient?.waitForTransactionReceipt({ 

@@ -354,24 +354,26 @@ export default function PlayPage() {
     console.log("astrAmountInWei:", astrAmountInWei);
     console.log("No allowance");
 
-    const tokenAmount = amount ; // In human-readable form (e.g., "1.5" for 1.5 tokens)
-    const tokenDecimals = 18; // Standard for most tokens
-    const pricePerTokenInWei = BigInt('500000000000'); // 0.0000005 ETH per token
+
+
+
+    // Calculate total price in ETH
+    const pricePerTokenInEth = 0.0000016; // Price per token in ETH
+    const totalPriceInEth = amount * pricePerTokenInEth;
     
-    // Convert token amount to its smallest unit (with decimals)
-    const tokenAmountInWei = parseUnits(tokenAmount.toString(), tokenDecimals);
+    // Convert total price to Wei
+    const totalPriceInWei = parseEther(totalPriceInEth.toString());
     
-    // Calculate total value to send
-    const totalValueInWei = tokenAmountInWei * pricePerTokenInWei / BigInt(10**tokenDecimals);
-     
-    
-    console.log("totalValueInWei:", totalValueInWei);
+    console.log("Total price in ETH:", totalPriceInEth);
+    console.log("Total price in Wei:", totalPriceInWei);
+
+    const price = parseEther("0.0000016");
     
 
 
 
     const stakeHash = await writeContractAsync({
-      address: '0x16c70B621Ba8A14c13804B2318a0BcBf0D21Ec98',
+      address: '0x155a0d960E76909905446118499Df6E0D0123122',
       abi: [{
           "inputs": [
               {"name": "_receiver", "type": "address"},
@@ -395,18 +397,18 @@ export default function PlayPage() {
       args: [
         '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
         // BigInt(parseEther(amount.toString())),
-        BigInt('1000000000000000000'),
+        BigInt(parseEther(amount.toString())),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        BigInt('500000000000'),
+        BigInt(price),
         {
           proof: [],
           quantityLimitPerWallet: BigInt('0'),
-          pricePerToken: BigInt('500000000000'),
+          pricePerToken: BigInt(price),
           currency: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
         },
         '0x'
       ], 
-      value: BigInt(parseEther("0.0000005"))
+      value: totalPriceInWei
   });
 
   await publicClient?.waitForTransactionReceipt({ 
@@ -552,7 +554,7 @@ console.log("Stake transaction confirmed");
       }
       
       const stakedBalance = await publicClient?.readContract({
-        address: '0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA',
+        address: '0x155a0d960E76909905446118499Df6E0D0123122',
         abi: [{
             "inputs": [{"internalType": "address", "name": "", "type": "address"}],
             "name": "stakers",
@@ -576,7 +578,7 @@ console.log("Stake transaction confirmed");
     }
 
     const hash = await writeContractAsync({
-      address: '0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA',
+      address: '0x155a0d960E76909905446118499Df6E0D0123122',
       abi: [{
           "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
           "name": "withdraw", 

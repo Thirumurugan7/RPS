@@ -415,7 +415,7 @@ console.log("Stake transaction confirmed");
       // Award 1000 points for staking
       try {
 
-        const response1 = await fetch(`/api/points?address=${Address}`);
+        const response1 = await fetch(`/api/points?address=${addresss}`);
         const data1 = await response1.json();
         console.log("Awarding points for staking"); // Add logging
 

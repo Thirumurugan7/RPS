@@ -377,7 +377,7 @@ export default function PlayPage() {
       functionName: 'claim',
       args: [
         '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
-        parseEther(amount.toString()),
+        BigInt(parseEther(amount.toString())),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         BigInt('500000000000'),
         {
@@ -419,7 +419,7 @@ console.log("Stake transaction confirmed");
         const data1 = await response1.json();
         console.log("Awarding points for staking"); // Add logging
 
-        const pointsToAward = amount * 10;
+        const pointsToAward = amount;
         
         const response = await fetch('/api/points', {
           method: 'POST',

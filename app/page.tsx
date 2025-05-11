@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAccount, usePublicClient, useWriteContract } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { formatEther, parseEther } from 'viem';
+import { formatEther, parseEther, parseUnits } from 'viem';
 
 export default function PlayPage() {
   const { address, isConnected } = useAccount();
@@ -353,6 +353,23 @@ export default function PlayPage() {
 
     console.log("astrAmountInWei:", astrAmountInWei);
     console.log("No allowance");
+
+    const tokenAmount = amount ; // In human-readable form (e.g., "1.5" for 1.5 tokens)
+    const tokenDecimals = 18; // Standard for most tokens
+    const pricePerTokenInWei = BigInt('500000000000'); // 0.0000005 ETH per token
+    
+    // Convert token amount to its smallest unit (with decimals)
+    const tokenAmountInWei = parseUnits(tokenAmount.toString(), tokenDecimals);
+    
+    // Calculate total value to send
+    const totalValueInWei = tokenAmountInWei * pricePerTokenInWei;
+     
+    
+    console.log("totalValueInWei:", totalValueInWei);
+    
+
+
+
     const stakeHash = await writeContractAsync({
       address: '0x16c70B621Ba8A14c13804B2318a0BcBf0D21Ec98',
       abi: [{
@@ -377,7 +394,8 @@ export default function PlayPage() {
       functionName: 'claim',
       args: [
         '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
-        BigInt(parseEther(amount.toString())),
+        // BigInt(parseEther(amount.toString())),
+        BigInt('1000000000000000000'),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         BigInt('500000000000'),
         {
@@ -388,7 +406,7 @@ export default function PlayPage() {
         },
         '0x'
       ], 
-      value: BigInt(parseEther("0.0000005"))
+      value: totalValueInWei
   });
 
   await publicClient?.waitForTransactionReceipt({ 

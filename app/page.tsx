@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAccount, usePublicClient, useWriteContract } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { formatEther, parseEther, parseUnits } from 'viem';
+import { formatEther, parseEther } from 'viem';
 
 export default function PlayPage() {
   const { address, isConnected } = useAccount();

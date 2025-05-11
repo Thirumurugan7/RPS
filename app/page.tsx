@@ -154,9 +154,9 @@ export default function PlayPage() {
         // Update info box to show points needed
         if (infoBox) {
           infoBox.innerHTML = `
-            NEED 1000 POINTS TO PLAY<br />
+            NEED 2200 POINTS TO PLAY<br />
             YOUR POINTS: ${points}<br />
-            POINTS NEEDED: ${1000 - points > 0 ? 1000 - points : 0}
+            POINTS NEEDED: ${2200 - points > 0 ? 2200 - points : 0}
           `;
         }
       }
@@ -475,7 +475,7 @@ if(res && res.status === "success") {
         
         // Update UI elements directly
         const startGameBtn = document.getElementById('start-game-btn');
-        if (startGameBtn && updatedPoints >= 1000) {
+        if (startGameBtn && updatedPoints >= 2200) {
           startGameBtn.classList.remove('btn-disabled');
           (startGameBtn as HTMLButtonElement).disabled = false;
           startGameBtn.textContent = 'START GAME';
@@ -483,7 +483,7 @@ if(res && res.status === "success") {
         
         // Update the info box
         const infoBox = document.getElementById('info-box-text');
-        if (infoBox && updatedPoints >= 1000) {
+        if (infoBox && updatedPoints >= 2200) {
           infoBox.innerHTML = `
             GAME UNLOCKED!<br />
             YOUR POINTS: ${updatedPoints}<br />
@@ -497,7 +497,7 @@ if(res && res.status === "success") {
 
     const stakeSuccess = document.getElementById('stake-success');
     if (stakeSuccess) {
-      stakeSuccess.textContent = 'PURCHASE SUCCESSFUL! +1000 POINTS AWARDED!';
+      stakeSuccess.textContent = 'PURCHASE SUCCESSFUL! +2200 POINTS AWARDED!';
       stakeSuccess.style.display = 'block';
     }
     
@@ -865,9 +865,9 @@ try {
         const amount = parseFloat(stakeInput.value);
         const stakeError = document.getElementById('stake-error');
         
-        if (isNaN(amount) || amount < 1000) {
+        if (isNaN(amount) || amount < 2200) {
           if (stakeError) {
-            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 1000)';
+            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 2200)';
             stakeError.style.display = 'block';
           }
           return;
@@ -986,7 +986,7 @@ try {
       const unstakeBtn = document.getElementById('unstake-btn');
       if (unstakeBtn) {
         // Check BOTH games played AND points
-        if (gamesPlayed >= gameState.gamesRequiredToUnstake && gameState.points >= 1000) {
+        if (gamesPlayed >= gameState.gamesRequiredToUnstake && gameState.points >= 2200) {
           // Enable unstake button if both conditions are met
           unstakeBtn.classList.remove('btn-disabled');
           (unstakeBtn as HTMLButtonElement).disabled = false;
@@ -1109,9 +1109,9 @@ try {
         <div className="border-2 border-green-400 p-6 max-w-md text-center relative mt-12">
           <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black px-4 text-green-400">SYSTEM INFO</div>
           <p id="info-box-text" className="text-xs md:text-sm text-green-300 leading-relaxed mt-4">
-            NEED 1000 POINTS TO PLAY<br />
+            NEED 2200 POINTS TO PLAY<br />
             YOUR POINTS: {gameState.points}<br />
-            POINTS NEEDED: {1000 - gameState.points > 0 ? 1000 - gameState.points : 0}
+            POINTS NEEDED: {2200 - gameState.points > 0 ? 2200 - gameState.points : 0}
           </p>
         </div>
       </div>
@@ -1130,7 +1130,7 @@ try {
         <h3 className="text-lg mb-6">PURCHASE TOKENS TO PLAY</h3>
         <div className="stake-info">
           PURCHASE TOKENS TO UNLOCK THE GAME<br />
-          MINIMUM PURCHASE: 1000 TOKENS<br />
+          MINIMUM PURCHASE: 2200 TOKENS<br />
           PLAY 10 GAMES TO UNLOCK UNSTAKE
         </div>
         

@@ -608,7 +608,6 @@ if(res && res.status === "success") {
   // Wait for transaction confirmation
    await publicClient?.waitForTransactionReceipt({ hash });
 
-   const tokenInEth = Number(parseEther(stakedBalance[2].toString()))
 
 try {
   const response = await fetch('/api/points', {
@@ -618,7 +617,7 @@ try {
     },
     body: JSON.stringify({
       address: addresss,
-      points: tokenInEth,
+      points: 0,
       reason: 'Unstaking tokens'
     }),
   });  

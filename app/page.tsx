@@ -362,7 +362,7 @@ export default function PlayPage() {
     const tokenAmountInWei = parseUnits(tokenAmount.toString(), tokenDecimals);
     
     // Calculate total value to send
-    const totalValueInWei = tokenAmountInWei * pricePerTokenInWei;
+    const totalValueInWei = tokenAmountInWei * pricePerTokenInWei / BigInt(10**tokenDecimals);
      
     
     console.log("totalValueInWei:", totalValueInWei);

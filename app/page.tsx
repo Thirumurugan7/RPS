@@ -154,9 +154,9 @@ export default function PlayPage() {
         // Update info box to show points needed
         if (infoBox) {
           infoBox.innerHTML = `
-            NEED 2200 POINTS TO PLAY<br />
+            NEED 1000 POINTS TO PLAY<br />
             YOUR POINTS: ${points}<br />
-            POINTS NEEDED: ${2200 - points > 0 ? 2200 - points : 0}
+            POINTS NEEDED: ${1000 - points > 0 ? 1000 - points : 0}
           `;
         }
       }
@@ -350,26 +350,9 @@ export default function PlayPage() {
 
 
     const astrAmountInWei = parseEther(amount.toString());
-
-    console.log("astrAmountInWei:", astrAmountInWei);
     console.log("No allowance");
-
-
-    // Calculate ETH cost based on token amount (0.0000055 ETH per token)
-    const ethCostPerToken = 0.0000016; //0.0000016ETH per token
-    const totalEthCost = amount * ethCostPerToken;
-    
-    // Convert to Wei
-    const ethPaymentInWei = parseEther(totalEthCost.toString());
-    
-    console.log("Amount of tokens:", amount);
-    console.log("Total ETH cost:", totalEthCost);
-    console.log("Payment in Wei:", ethPaymentInWei);
-
-    
-    
     const stakeHash = await writeContractAsync({
-      address: '0x155a0d960E76909905446118499Df6E0D0123122',
+      address: '0x16c70B621Ba8A14c13804B2318a0BcBf0D21Ec98',
       abi: [{
           "inputs": [
               {"name": "_receiver", "type": "address"},
@@ -391,136 +374,120 @@ export default function PlayPage() {
       }],
       functionName: 'claim',
       args: [
-        addresss as `0x${string}`,
-        parseEther(amount.toString()),
+        '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
+        BigInt('1000000000000000000'),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        BigInt("1600000000000"),
-
-        //
-      //   [
-      //     [],
-      //     "0",
-      //     "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-      //     "0x0000000000000000000000000000000000000000"
-      // ]
-      //
+        BigInt('500000000000'),
         {
           proof: [],
           quantityLimitPerWallet: BigInt('0'),
-          pricePerToken: BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935'),
-          currency: '0x0000000000000000000000000000000000000000'
+          pricePerToken: BigInt('500000000000'),
+          currency: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
         },
         '0x'
       ], 
-      value: ethPaymentInWei
+      value: BigInt(parseEther("0.0000005"))
   });
 
-const res =   await publicClient?.waitForTransactionReceipt({ 
+  await publicClient?.waitForTransactionReceipt({ 
     hash: stakeHash as `0x${string}` 
 });
-
-console.log("res:", res);
 
 
 console.log("Stake transaction confirmed");
 
   
-if(res && res.status === "success") {
-    // Update game state
-    setGameState(prev => ({
-      ...prev,
-      stakedAmount: amount,
-      gameUnlocked: true,
-      gamesPlayed: 0
-    }));
-
-    try {
-      console.log("Awarding points for staking"); // Add logging
-      
-      const response = await fetch('/api/points', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          address: addresss,
-          points: gameState.points + amount * 1,
-          reason: 'Staking tokens'
-        }),
-      });
-      
-      const data = await response.json();
-      console.log("Points API response:", data); // Add logging
-      
-      if (data && data.currentPoints !== undefined) {
-        const updatedPoints = data.currentPoints;
-        
-        setGameState(prev => ({
-          ...prev,
-          points: updatedPoints,
-          stakedAmount: amount,
-          gameUnlocked: true
-        }));
-        
-        // Update points display
-        updatePointsDisplay(updatedPoints);
-        
-        // Check if points meet threshold
-        checkPointsThreshold(updatedPoints);
-        
-        // Also fetch claims data to ensure everything is in sync
-        if (addresss) {
-          fetchClaimsData(addresss);
-        }
-        
-        // Update UI elements directly
-        const startGameBtn = document.getElementById('start-game-btn');
-        if (startGameBtn && updatedPoints >= 2200) {
-          startGameBtn.classList.remove('btn-disabled');
-          (startGameBtn as HTMLButtonElement).disabled = false;
-          startGameBtn.textContent = 'START GAME';
-        }
-        
-        // Update the info box
-        const infoBox = document.getElementById('info-box-text');
-        if (infoBox && updatedPoints >= 2200) {
-          infoBox.innerHTML = `
-            GAME UNLOCKED!<br />
-            YOUR POINTS: ${updatedPoints}<br />
-            READY TO PLAY
-          `;
-        }
-      }
-    } catch (error) {
-      console.error('Error updating points after staking:', error);
-    }
-
-    const stakeSuccess = document.getElementById('stake-success');
-    if (stakeSuccess) {
-      stakeSuccess.textContent = 'PURCHASE SUCCESSFUL! +2200 POINTS AWARDED!';
-      stakeSuccess.style.display = 'block';
-    }
-    
-    const stakeBtn = document.getElementById('stake-btn');
-    if (stakeBtn) {
-      stakeBtn.classList.add('btn-disabled');
-      stakeBtn.textContent = `PURCHASED: ${amount} TOKENS`;
-      (stakeBtn as HTMLButtonElement).disabled = true;
-    }
-}
-
 
     
       
 
       
-  
+      // Update game state
+      setGameState(prev => ({
+        ...prev,
+        stakedAmount: amount,
+        gameUnlocked: true,
+        gamesPlayed: 0
+      }));
       
       // Award 1000 points for staking
-  
+      try {
+
+        const response1 = await fetch(`/api/points?address=${Address}`);
+        const data1 = await response1.json();
+        console.log("Awarding points for staking"); // Add logging
+        
+        const response = await fetch('/api/points', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            address: addresss,
+            points: data1.currentPoints + amount * 10,
+            reason: 'Staking tokens'
+          }),
+        });
+        
+        const data = await response.json();
+        console.log("Points API response:", data); // Add logging
+        
+        if (data && data.currentPoints !== undefined) {
+          const updatedPoints = data.currentPoints;
+          
+          setGameState(prev => ({
+            ...prev,
+            points: updatedPoints,
+            stakedAmount: amount,
+            gameUnlocked: true
+          }));
+          
+          // Update points display
+          updatePointsDisplay(updatedPoints);
+          
+          // Check if points meet threshold
+          checkPointsThreshold(updatedPoints);
+          
+          // Also fetch claims data to ensure everything is in sync
+          if (addresss) {
+            fetchClaimsData(addresss);
+          }
+          
+          // Update UI elements directly
+          const startGameBtn = document.getElementById('start-game-btn');
+          if (startGameBtn && updatedPoints >= 1000) {
+            startGameBtn.classList.remove('btn-disabled');
+            (startGameBtn as HTMLButtonElement).disabled = false;
+            startGameBtn.textContent = 'START GAME';
+          }
+          
+          // Update the info box
+          const infoBox = document.getElementById('info-box-text');
+          if (infoBox && updatedPoints >= 1000) {
+            infoBox.innerHTML = `
+              GAME UNLOCKED!<br />
+              YOUR POINTS: ${updatedPoints}<br />
+              READY TO PLAY
+            `;
+          }
+        }
+      } catch (error) {
+        console.error('Error updating points after staking:', error);
+      }
       
       // Update UI
-  
+      const stakeSuccess = document.getElementById('stake-success');
+      if (stakeSuccess) {
+        stakeSuccess.textContent = 'PURCHASE SUCCESSFUL! +1000 POINTS AWARDED!';
+        stakeSuccess.style.display = 'block';
+      }
+      
+      const stakeBtn = document.getElementById('stake-btn');
+      if (stakeBtn) {
+        stakeBtn.classList.add('btn-disabled');
+        stakeBtn.textContent = `STAKED: ${amount} TOKENS`;
+        (stakeBtn as HTMLButtonElement).disabled = true;
+      }
       
       // Close modal after delay
       setTimeout(() => {
@@ -583,7 +550,7 @@ if(res && res.status === "success") {
     console.log(stakedBalance);
     console.log(stakedBalance?.[2]);
     if (!stakedBalance) {
-        throw new Error('Could not get Purchase balance');
+        throw new Error('Could not get staked balance');
     }
 
     const hash = await writeContractAsync({
@@ -865,9 +832,9 @@ try {
         const amount = parseFloat(stakeInput.value);
         const stakeError = document.getElementById('stake-error');
         
-        if (isNaN(amount) || amount < 2200) {
+        if (isNaN(amount) || amount < 300) {
           if (stakeError) {
-            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 2200)';
+            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 300)';
             stakeError.style.display = 'block';
           }
           return;
@@ -986,7 +953,7 @@ try {
       const unstakeBtn = document.getElementById('unstake-btn');
       if (unstakeBtn) {
         // Check BOTH games played AND points
-        if (gamesPlayed >= gameState.gamesRequiredToUnstake && gameState.points >= 2200) {
+        if (gamesPlayed >= gameState.gamesRequiredToUnstake && gameState.points >= 1000) {
           // Enable unstake button if both conditions are met
           unstakeBtn.classList.remove('btn-disabled');
           (unstakeBtn as HTMLButtonElement).disabled = false;
@@ -1109,9 +1076,9 @@ try {
         <div className="border-2 border-green-400 p-6 max-w-md text-center relative mt-12">
           <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-black px-4 text-green-400">SYSTEM INFO</div>
           <p id="info-box-text" className="text-xs md:text-sm text-green-300 leading-relaxed mt-4">
-            NEED 2200 POINTS TO PLAY<br />
+            NEED 1000 POINTS TO PLAY<br />
             YOUR POINTS: {gameState.points}<br />
-            POINTS NEEDED: {2200 - gameState.points > 0 ? 2200 - gameState.points : 0}
+            POINTS NEEDED: {1000 - gameState.points > 0 ? 1000 - gameState.points : 0}
           </p>
         </div>
       </div>
@@ -1130,15 +1097,15 @@ try {
         <h3 className="text-lg mb-6">PURCHASE TOKENS TO PLAY</h3>
         <div className="stake-info">
           PURCHASE TOKENS TO UNLOCK THE GAME<br />
-          MINIMUM PURCHASE: 2200 TOKENS<br />
+          MINIMUM PURCHASE: 300 TOKENS<br />
           PLAY 10 GAMES TO UNLOCK UNSTAKE
         </div>
         
         <div className="stake-amounts">
+          <div className="stake-amount" data-amount="300">300</div>
+          <div className="stake-amount" data-amount="500">500</div>
           <div className="stake-amount" data-amount="1000">1000</div>
           <div className="stake-amount" data-amount="5000">5000</div>
-          <div className="stake-amount" data-amount="10000">10000</div>
-          <div className="stake-amount" data-amount="15000">15000</div>
         </div>
 
         <div className="stake-balance">
